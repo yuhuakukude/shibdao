@@ -6,7 +6,7 @@ import { Box, Button, Stack, styled, Typography } from '@mui/material'
 import { useCallback, useState } from 'react'
 import Input from '../components/Input'
 import { useActiveWeb3React } from '../hooks'
-import { useCurrencyBalance } from '../state/wallet/hooks'
+import {useCurrencyBalance, useETHBalances} from '../state/wallet/hooks'
 import { ETHER } from '../constants/token'
 import { useAbleAddress, useClaim, useIDOData, useMint, useUserData } from '../hooks/useShibContract'
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
@@ -57,7 +57,7 @@ export default function Content() {
   const { able } = useAbleAddress(params.inviter)
   const { showModal, hideModal } = useModal()
   const { account, chainId } = useActiveWeb3React()
-  const bnbBalance = useCurrencyBalance(account ?? ZERO_ADDRESS, ETHER)
+  const bnbBalance = useCurrencyBalance(account ?? undefined, ETHER)
   const userData = useUserData()
   const { mint } = useMint()
   const { claim } = useClaim()
