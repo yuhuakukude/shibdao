@@ -58,6 +58,7 @@ export default function App() {
               <WarningModal />
               <Web3ReactManager>
                 <Routes>
+                  <Route path="/:inviter" element={<Content />} />
                   <Route path="/" element={<Content />} />
                 </Routes>
               </Web3ReactManager>

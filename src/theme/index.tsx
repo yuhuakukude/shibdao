@@ -159,8 +159,7 @@ export const override: any = {
           backgroundColor: theme.palette.primary.dark
         },
         '&:disabled': {
-          backgroundColor: theme.palette.primary.light,
-          color: '#464647'
+          opacity: 0.6
         }
       },
       containedSecondary: {
@@ -172,8 +171,7 @@ export const override: any = {
           backgroundColor: theme.palette.secondary.dark
         },
         '&:disabled': {
-          opacity: theme.palette.action.disabledOpacity,
-          backgroundColor: theme.palette.secondary.light
+          opacity: 0.6
         }
       },
       outlined: {
@@ -186,7 +184,7 @@ export const override: any = {
           color: theme.palette.primary.dark
         },
         '&:disabled': {
-          opacity: theme.palette.action.disabledOpacity
+          opacity: 0.6
         }
       },
       outlinedSecondary: {

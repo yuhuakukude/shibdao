@@ -3,12 +3,19 @@ import LogoImg from 'assets/images/logo.png'
 import DescPic from 'assets/images/pic01.png'
 import HelpIcon from 'assets/images/help-circle.png'
 import { Box, Button, Stack, styled, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Input from '../components/Input'
 import { useActiveWeb3React } from '../hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { ETHER } from '../constants/token'
-import { useUserData } from '../hooks/useShibContract'
+import { useAbleAddress, useClaim, useIDOData, useMint, useUserData } from '../hooks/useShibContract'
+import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import MessageBox from 'components/Modal/TransactionModals/MessageBox'
+import TransactionSubmittedModal from '../components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import useModal from '../hooks/useModal'
+import { shortenAddress } from '../utils'
+import { useParams } from 'react-router-dom'
+import { ZERO_ADDRESS } from '../constants'
 
 const Rules: string[] = [
   'IDO总量: 500万亿 SHIBDAO',
@@ -21,14 +28,15 @@ const Rules: string[] = [
   'IDO五天期限，未完成的全部销毁'
 ]
 
-const PriceBtn = styled(Typography)(({ theme }) => ({
+const PriceBtn = styled(Button)(({ active }: { active: boolean }) => ({
   width: 'auto',
   height: 'auto',
   fontSize: '10px',
   background: '#0084FF',
   borderRadius: '10px',
   padding: '6px 10px',
-  color: '#FFFFFF'
+  color: '#FFFFFF',
+  opacity: active ? 1 : 0.3
 }))
 
 // const PriceBtnUnable = styled(Typography)(({ theme }) => ({
@@ -43,10 +51,59 @@ const PriceBtn = styled(Typography)(({ theme }) => ({
 
 export default function Content() {
   const textSizeSmall = '10px'
-  const [balance, setBalance] = useState('')
+  const params = useParams<{ inviter: string }>()
+  const { able } = useAbleAddress(params.inviter)
+  const { showModal, hideModal } = useModal()
   const { account } = useActiveWeb3React()
   const bnbBalance = useCurrencyBalance(account ?? '', ETHER)
   const userData = useUserData()
+  const { mint } = useMint()
+  const { claim } = useClaim()
+  const { isEnd } = useIDOData()
+  const [amount, setAmount] = useState('0.5')
+  const amountList = ['0.5', '1', '1.5', '2']
+  console.log('userData', userData, able)
+  //const currencyAmount = tryParseAmount(amount, BASE_TOKEN[chainId ?? 56])
+  // const overflow =
+  //   userData?.balanceOf &&
+  //   currencyAmount &&
+  //   JSBI.greaterThan(
+  //     JSBI.add(JSBI.BigInt(userData.balanceOf.raw), JSBI.BigInt(currencyAmount.raw)),
+  //     JSBI.BigInt('200000000000000000')
+  //   )
+  const mintCallback = useCallback(async () => {
+    if (!amount || !account) return
+    showModal(<TransactionPendingModal />)
+    mint(amount)
+      .then(() => {
+        hideModal()
+        showModal(<TransactionSubmittedModal />)
+      })
+      .catch((err: any) => {
+        hideModal()
+        showModal(
+          <MessageBox type="error">{err.error && err.error.message ? err.error.message : err?.message}</MessageBox>
+        )
+        console.error(err)
+      })
+  }, [account, amount, showModal, mint, hideModal])
+
+  const claimCallback = useCallback(async () => {
+    if (!account) return
+    showModal(<TransactionPendingModal />)
+    claim()
+      .then(() => {
+        hideModal()
+        showModal(<TransactionSubmittedModal />)
+      })
+      .catch((err: any) => {
+        hideModal()
+        showModal(
+          <MessageBox type="error">{err.error && err.error.message ? err.error.message : err?.message}</MessageBox>
+        )
+        console.error(err)
+      })
+  }, [account, showModal, claim, hideModal])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', background: '#FFFFFF' }}>
@@ -122,17 +179,36 @@ export default function Content() {
         <Typography sx={{ fontSize: '42px', color: '#3D3D3D', fontWeight: '500', marginTop: '10px' }}>
           00:00:00
         </Typography>
-        <Typography>您的余额: {bnbBalance?.toSignificant()} BNB</Typography>
-        <Typography>您已购买: {balance} SHIB</Typography>
         <Typography sx={{ marginTop: '10px', fontSize: '20px', color: '#3D3D3D' }}>请选择您的私募金额</Typography>
         <Stack spacing={20} direction="row" sx={{ margin: '16px 0px' }}>
-          <PriceBtn>0.5bnb</PriceBtn>
-          <PriceBtn>1bnb</PriceBtn>
-          <PriceBtn>1.5bnb</PriceBtn>
-          <PriceBtn>2bnb</PriceBtn>
+          {amountList.map(value => {
+            return (
+              <PriceBtn
+                active={value === amount}
+                onClick={() => {
+                  console.log('tag--')
+                  setAmount(value)
+                }}
+                key={value}
+              >
+                {value}bnb
+              </PriceBtn>
+            )
+          })}
         </Stack>
-        <Typography></Typography>
-        <Button sx={{ height: 'auto', fontSize: '10px' }}>购买</Button>
+        <Stack width={'100%'} mb={10} direction={'row'} justifyContent={'space-between'}>
+          <Typography fontSize={12} color={'red'}>
+            {(!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able ? '推荐链接无效' : ''}
+          </Typography>
+          <Typography fontSize={12}>您的余额: {bnbBalance?.toSignificant()} BNB</Typography>
+        </Stack>
+        <Button
+          disabled={(!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able}
+          onClick={mintCallback}
+          sx={{ height: 'auto', fontSize: '10px' }}
+        >
+          购买
+        </Button>
       </Box>
 
       <Box
@@ -169,19 +245,30 @@ export default function Content() {
           padding: '16px'
         }}
       >
-        <Stack direction="row" spacing={10} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Stack
+          direction="row"
+          justifyContent={'space-between'}
+          spacing={10}
+          sx={{ display: 'flex', alignItems: 'center' }}
+        >
           <Typography sx={{ fontSize: textSizeSmall }}>推荐链接：</Typography>
-          <Typography>{userData.inviter}</Typography>
+          <Typography>{shortenAddress(userData.inviter, 6)}</Typography>
           <Button sx={{ width: '48px', height: 'auto', fontSize: textSizeSmall }}>复制</Button>
         </Stack>
 
-        <Typography sx={{ marginTop: '10px' }}>已获得推荐奖励：{userData.rewards.toSignificant()} bnb</Typography>
+        <Typography sx={{ marginTop: '10px' }}>已获得推荐奖励：{userData.rewards?.toFixed(2)} bnb</Typography>
         <Typography sx={{ marginTop: '10px' }}>已推荐人数：{userData.subordinates} 人</Typography>
 
-        <Stack direction="row" spacing={10} sx={{ marginTop: '10px' }}>
-          <Typography>我的余额：{userData.balanceOf.toSignificant()}</Typography>
-          <Input height={30} value={balance} onChange={e => setBalance(e.target.value)} />
-          <Button sx={{ width: 'auto', height: 'auto', fontSize: textSizeSmall }}>提币</Button>
+        <Stack direction="row" spacing={10} sx={{ marginTop: '10px' }} alignItems={'center'}>
+          <Typography width={140}>我的余额：</Typography>
+          <Input height={30} value={userData.balanceOf?.toFixed(2).toString() ?? '0'} />
+          <Button
+            disabled={!isEnd || userData.balanceOf?.equalTo('0')}
+            onClick={claimCallback}
+            sx={{ width: 'auto', height: 'auto', fontSize: textSizeSmall }}
+          >
+            提币
+          </Button>
         </Stack>
       </Box>
 

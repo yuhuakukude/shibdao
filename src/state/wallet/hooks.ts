@@ -12,7 +12,7 @@ import {
 import { CurrencyAmount, TokenAmount } from '../../constants/token/fractions'
 import JSBI from 'jsbi'
 import { Currency, ETHER, Token } from '../../constants/token'
-import { BAST_TOKEN } from '../../constants'
+import { BASE_TOKEN } from '../../constants'
 import { ChainId } from 'constants/chain'
 import { arrayify, parseBytes32String } from 'ethers/lib/utils'
 
@@ -135,7 +135,7 @@ export function useCurrencyBalance(account?: string, currency?: Currency): Curre
 export function useBaseTokenBalance(): TokenAmount | undefined {
   const { account, chainId } = useActiveWeb3React()
 
-  const base = chainId ? BAST_TOKEN[chainId] : undefined
+  const base = chainId ? BASE_TOKEN[chainId] : undefined
 
   const baseBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, base)
 
