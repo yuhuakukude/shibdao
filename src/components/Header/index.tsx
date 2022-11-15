@@ -18,7 +18,7 @@ export const Tabs: Tab[] = [
   { title: '通知', route: routes.note },
   { title: '审计报告', link: 'https://google.com' },
   { title: '白皮书', link: 'https://google.com' },
-  { title: 'English', link: 'https://google.com' }
+  { title: 'English', route: routes.english }
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
