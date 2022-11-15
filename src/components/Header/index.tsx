@@ -3,6 +3,8 @@ import { AppBar, Box, MenuItem, MenuList, Paper, Popper, styled, Typography } fr
 import { routes } from 'constants/routes'
 import MenuIcon from 'assets/svg/menu.svg'
 import Web3Status from './Web3Status'
+import { NavLink } from 'react-router-dom'
+import { ExternalLink } from '../../theme/components'
 
 interface Tab {
   title: string
@@ -12,8 +14,8 @@ interface Tab {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'IDO', route: routes.test3 },
-  { title: '通知', link: 'https://google.com' },
+  { title: 'IDO', route: routes.ido },
+  { title: '通知', route: routes.note },
   { title: '审计报告', link: 'https://google.com' },
   { title: '白皮书', link: 'https://google.com' },
   { title: 'English', link: 'https://google.com' }
@@ -88,7 +90,22 @@ export default function Header() {
               <Paper>
                 <MenuList>
                   {Tabs.map((tab, index) => {
-                    return <MenuItem key={index}>{tab.title}</MenuItem>
+                    return (
+                      <MenuItem key={index}>
+                        {tab.route && (
+                          <NavLink
+                            onClick={() => {
+                              setOpen(false)
+                            }}
+                            style={{ textDecoration: 'none' }}
+                            to={tab.route}
+                          >
+                            {tab.title}
+                          </NavLink>
+                        )}
+                        {tab.link && <ExternalLink href={tab.link}> {tab.title}</ExternalLink>}
+                      </MenuItem>
+                    )
                   })}
                 </MenuList>
               </Paper>

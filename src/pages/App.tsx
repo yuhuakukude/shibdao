@@ -8,6 +8,8 @@ import Web3ReactManager from '../components/essential/Web3ReactManager'
 import { ModalProvider } from 'context/ModalContext'
 import Footer from 'components/Footer'
 import Content from './content'
+import En from './en'
+import Note from './note'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -57,6 +59,8 @@ export default function App() {
               <Web3ReactManager>
                 <Routes>
                   <Route path="/:inviter" element={<Content />} />
+                  <Route path="/note" element={<Note />} />
+                  <Route path="/english" element={<En />} />
                   <Route path="/" element={<Content />} />
                 </Routes>
               </Web3ReactManager>

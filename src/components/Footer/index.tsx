@@ -1,5 +1,4 @@
 import { Box, useTheme, Button } from '@mui/material'
-import { ReactComponent as Twitter } from 'assets/socialLinksIcon/twitter.svg'
 import { ReactComponent as Telegram } from 'assets/socialLinksIcon/telegram.svg'
 import { ExternalLink } from 'theme/components'
 
@@ -26,13 +25,8 @@ export default function Footer() {
         }}
       >
         <Button variant="text">
-          <ExternalLink href="">
+          <ExternalLink href="https://s65535.com/SHIBDAO988">
             <Telegram />
-          </ExternalLink>
-        </Button>
-        <Button variant="text">
-          <ExternalLink href="">
-            <Twitter />
           </ExternalLink>
         </Button>
       </Box>
