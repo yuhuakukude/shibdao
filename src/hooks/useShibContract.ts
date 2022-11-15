@@ -20,8 +20,6 @@ export interface UserDateResp {
 export function useUserData(): UserDateResp {
   const { account } = useActiveWeb3React()
   const contract = useShibaContract()
-  if (!account) throw new Error('none account')
-  if (!contract) throw new Error('none contract')
   const userDataRes = useSingleCallResult(contract, 'userData', [account ?? undefined])
   const result = userDataRes?.result
   return {
