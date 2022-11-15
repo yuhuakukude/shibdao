@@ -12,11 +12,12 @@ import TransactionPendingModal from 'components/Modal/TransactionModals/Transact
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import TransactionSubmittedModal from '../components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import useModal from '../hooks/useModal'
-import { shortenAddress } from '../utils'
+import { shortenText } from '../utils'
 import { useParams } from 'react-router-dom'
 import { BASE_TOKEN, ZERO_ADDRESS } from '../constants'
 import { tryParseAmount } from '../utils/parseAmount'
 import JSBI from 'jsbi'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 
 const Rules: string[] = [
   'IDO总量: 500万亿 SHIBDAO',
@@ -32,7 +33,7 @@ const Rules: string[] = [
 const PriceBtn = styled(Button)(({ active }: { active: boolean }) => ({
   width: 'auto',
   height: 'auto',
-  fontSize: '10px',
+  fontSize: '14px',
   background: '#0084FF',
   borderRadius: '10px',
   padding: '6px 10px',
@@ -52,6 +53,7 @@ const PriceBtn = styled(Button)(({ active }: { active: boolean }) => ({
 
 export default function Content() {
   const textSizeSmall = '10px'
+  const [isCopied, setCopied] = useCopyClipboard()
   const params = useParams<{ inviter: string }>()
   const { able } = useAbleAddress(params.inviter)
   const { showModal, hideModal } = useModal()
@@ -128,13 +130,12 @@ export default function Content() {
           <Typography sx={{ fontWeight: '400', fontSize: '18px', marginLeft: '16px' }}>SHIBDAO</Typography>
         </Box>
         <Typography sx={{ fontWeight: '400', fontSize: '14px', marginTop: '16px' }}>
-          SHIBA INU DAO 简称SHIBDAO，由TX公链SHIB委员会联合38位地推团队
+          SHIBA INU DAO 简称SHIBDAO由TX公链SHIB委员会联合38位地推团队
           长和300位TXSHIB铁军发起的第二生态BSC上的代币，SHIBDAO是专注于
-          区块链安全范畴的加密型虚拟货币代币，起源于以太坊创始人V神当时的一
+          区块链安全范畴的加密型虚拟货币，起源于以太坊创始人V神当时的一
           场开源实验，当时引入的DAO概念让投资者可以自主的在社区内建议和投
-          票，以民主的方式发展项目并共同进行宣传推广从而获得项目的突破性进 展，以病毒繁殖的速度进行了传播。
-          未来SHIBDAO会专注于公链的安全 概念并加以审计与KYC的概念，让去中心化的区块链技术在安全的框架下
-          面运行，从而获得更多投资者的青睐。
+          票，以民主的方式发展项目并共同进行宣传推广从而获得项目的突破性进展，以病毒繁殖的速度进行了传播。
+          未来SHIBDAO会专注于公链的安全概念并加以审计与KYC的概念，让去中心化的区块链技术在安全的框架下面运行，从而获得更多投资者的青睐。
         </Typography>
       </Box>
 
@@ -196,7 +197,7 @@ export default function Content() {
                 }}
                 key={value}
               >
-                {value}bnb
+                {value}BNB
               </PriceBtn>
             )
           })}
@@ -210,7 +211,7 @@ export default function Content() {
         <Button
           disabled={((!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able) || overflow}
           onClick={mintCallback}
-          sx={{ height: 'auto', fontSize: '10px' }}
+          sx={{ height: 'auto', fontSize: '14px' }}
         >
           购买
         </Button>
@@ -257,8 +258,16 @@ export default function Content() {
           sx={{ display: 'flex', alignItems: 'center' }}
         >
           <Typography sx={{ fontSize: textSizeSmall }}>推荐链接：</Typography>
-          <Typography>{userData?.inviter ? shortenAddress(userData.inviter, 6) : '--'}</Typography>
-          <Button sx={{ width: '48px', height: 'auto', fontSize: textSizeSmall }}>复制</Button>
+          <Typography>{account ? shortenText(`https://${window.location.host}/${account}`, 10) : '--'}</Typography>
+          <Button
+            disabled={isCopied || !account}
+            onClick={() => {
+              setCopied(`https://${window.location.host}/${account}`)
+            }}
+            sx={{ width: '48px', height: 'auto', fontSize: textSizeSmall }}
+          >
+            {isCopied ? '已复制' : '复制'}
+          </Button>
         </Stack>
 
         <Typography sx={{ marginTop: '10px' }}>已获得推荐奖励：{userData.rewards?.toFixed(2)} bnb</Typography>
@@ -266,7 +275,7 @@ export default function Content() {
 
         <Stack direction="row" spacing={10} sx={{ marginTop: '10px' }} alignItems={'center'}>
           <Typography width={140}>我的余额：</Typography>
-          <Input height={30} value={userData.balanceOf?.toFixed(2).toString() ?? '0'} />
+          <Input disabled height={30} value={userData.balanceOf?.toFixed(0).toString() ?? '0'} />
           <Button
             disabled={!isEnd || userData.balanceOf?.equalTo('0')}
             onClick={claimCallback}
