@@ -57,7 +57,7 @@ export default function Content() {
   const { able } = useAbleAddress(params.inviter)
   const { showModal, hideModal } = useModal()
   const { account, chainId } = useActiveWeb3React()
-  const bnbBalance = useCurrencyBalance(account ?? '', ETHER)
+  const bnbBalance = useCurrencyBalance(account ?? ZERO_ADDRESS, ETHER)
   const userData = useUserData()
   const { mint } = useMint()
   const { claim } = useClaim()
