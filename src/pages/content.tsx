@@ -69,7 +69,6 @@ export default function Content() {
     JSBI.BigInt(Number(amount) * 10 * 16000000000).toString(),
     BASE_TOKEN[chainId ?? 56]
   )
-  console.log('tag---》', currencyAmount?.raw.toString())
   const overflow =
     userData?.balanceOf &&
     currencyAmount &&
@@ -187,7 +186,6 @@ export default function Content() {
               <PriceBtn
                 active={value === amount}
                 onClick={() => {
-                  console.log('tag--')
                   setAmount(value)
                 }}
                 key={value}
@@ -268,18 +266,16 @@ export default function Content() {
         <Typography sx={{ marginTop: '10px' }}>已获得推荐奖励：{userData.rewards?.toFixed(2)} bnb</Typography>
         <Typography sx={{ marginTop: '10px' }}>已推荐人数：{userData.subordinates} 人</Typography>
 
-        <Stack spacing={10} sx={{ marginTop: '10px' }}>
-          <Typography width={140}>我的余额：</Typography>
-          <Stack spacing={10} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-            <Input disabled height={30} value={userData.balanceOf?.toFixed(0).toString() ?? '0'} />
-            <Button
-              disabled={!isEnd || userData.balanceOf?.equalTo('0')}
-              onClick={claimCallback}
-              sx={{ width: 'auto', height: 'auto', fontSize: textSizeSmall }}
-            >
-              提币
-            </Button>
-          </Stack>
+        <Stack direction={'row'} alignItems={'center'} spacing={10} sx={{ marginTop: '10px' }}>
+          <Typography width={140}>余额：</Typography>
+          <Input disabled height={30} value={userData.balanceOf?.toFixed(0).toString() ?? '0'} />
+          <Button
+            disabled={!isEnd || userData.balanceOf?.equalTo('0')}
+            onClick={claimCallback}
+            sx={{ width: 'auto', height: 'auto', fontSize: textSizeSmall }}
+          >
+            提币
+          </Button>
         </Stack>
       </Box>
 
