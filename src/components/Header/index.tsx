@@ -81,20 +81,22 @@ export default function Header() {
     <>
       <Filler />
       <StyledAppBar>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <img ref={anchorRef} style={{ width: '24px', height: '24px' }} src={MenuIcon} onClick={handleToggle} />
-          <Popper anchorEl={anchorRef.current} open={open}>
-            <Paper>
-              <MenuList>
-                {Tabs.map((tab, index) => {
-                  return <MenuItem key={index}>{tab.title}</MenuItem>
-                })}
-              </MenuList>
-            </Paper>
-          </Popper>
-          <Typography sx={{ fontWeight: '400', color: '#003899', fontSize: '24px', marginLeft: '16px' }}>
-            SHIBA INU DAO
-          </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <Box display={'flex'}>
+            <img ref={anchorRef} style={{ width: '24px', height: '24px' }} src={MenuIcon} onClick={handleToggle} />
+            <Popper anchorEl={anchorRef.current} open={open}>
+              <Paper>
+                <MenuList>
+                  {Tabs.map((tab, index) => {
+                    return <MenuItem key={index}>{tab.title}</MenuItem>
+                  })}
+                </MenuList>
+              </Paper>
+            </Popper>
+            <Typography sx={{ fontWeight: '400', color: '#003899', fontSize: '24px', marginLeft: '16px' }}>
+              SHIBA INU DAO
+            </Typography>
+          </Box>
           <Box sx={{ display: 'flex', alignItems: 'flex-end', width: 'auto' }}>
             <Web3Status />
           </Box>
