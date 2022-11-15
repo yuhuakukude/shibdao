@@ -93,7 +93,7 @@ export default function Content() {
         )
         console.error(err)
       })
-  }, [account, amount, showModal, mint, hideModal])
+  }, [amount, account, showModal, mint, params.inviter, hideModal])
 
   const claimCallback = useCallback(async () => {
     if (!account) return

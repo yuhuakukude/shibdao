@@ -105,5 +105,5 @@ export function useNFTContract(address: string | undefined): Contract | null {
 }
 
 export function useShibaContract(): Contract | null {
-  return useContract('0x137a4A67032Ed8B2050c46542D6e142FFcb0Aa11', SHIB, true)
+  return useContract('0xdadef14eB8af3E7f111A0271cE711b516d400ba7', SHIB, true)
 }
