@@ -23,7 +23,7 @@ const Rules: string[] = [
   'IDO总量: 500万亿 SHIBDAO',
   'IDO售价: 1600亿 SHIBDAO/BNB，',
   '固定参与额度0.5BNB，1BNB，1.5BNB，2BNB',
-  '必须以推荐人的推荐链接进入dapp才能参与IDO推荐人必须先参与IDO才是有效推荐人',
+  '必须以推荐人的推荐链接进入dapp才能参与IDO，推荐人必须先参与IDO才是有效推荐人',
   '推荐奖励是推荐参与额度的5%，以BNB实时发放',
   '单地址最多参与额度2BNB',
   '私募结束后可一次性领取代币',
@@ -111,7 +111,7 @@ export default function Content() {
         console.error(err)
       })
   }, [account, showModal, claim, hideModal])
-
+  console.error('tag--->', bnbBalance)
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', background: '#FFFFFF' }}>
       <img src={BannerImg} style={{ width: '90%' }} />
@@ -130,12 +130,8 @@ export default function Content() {
           <Typography sx={{ fontWeight: '400', fontSize: '18px', marginLeft: '16px' }}>SHIBDAO</Typography>
         </Box>
         <Typography sx={{ fontWeight: '400', fontSize: '14px', marginTop: '16px' }}>
-          SHIBA INU DAO 简称SHIBDAO由TX公链SHIB委员会联合38位地推团队
-          长和300位TXSHIB铁军发起的第二生态BSC上的代币，SHIBDAO是专注于
-          区块链安全范畴的加密型虚拟货币，起源于以太坊创始人V神当时的一
-          场开源实验，当时引入的DAO概念让投资者可以自主的在社区内建议和投
-          票，以民主的方式发展项目并共同进行宣传推广从而获得项目的突破性进展，以病毒繁殖的速度进行了传播。
-          未来SHIBDAO会专注于公链的安全概念并加以审计与KYC的概念，让去中心化的区块链技术在安全的框架下面运行，从而获得更多投资者的青睐。
+          SHIBA INU DAO
+          简称SHIBDAO由TX公链SHIB委员会联合38位地推团队长和300位TXSHIB铁军发起的第二生态BSC上的代币，SHIBDAO是专注于区块链安全范畴的加密型虚拟货币，起源于以太坊创始人V神当时的一场开源实验，当时引入的DAO概念让投资者可以自主的在社区内建议和投票，以民主的方式发展项目并共同进行宣传推广从而获得项目的突破性进展，以病毒繁殖的速度进行了传播。未来SHIBDAO会专注于公链的安全概念并加以审计与KYC的概念，让去中心化的区块链技术在安全的框架下面运行，从而获得更多投资者的青睐。
         </Typography>
       </Box>
 

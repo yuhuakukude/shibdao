@@ -36,7 +36,7 @@ export function useAbleAddress(address: string | undefined) {
   const userRes = useSingleCallResult(contract, 'userData', inputs)
   return useMemo(() => {
     if (isAddress(FIRST_ADDRESS) === isAddress(address)) {
-      return { ableAddress: true }
+      return { able: true }
     }
     return {
       able: userRes?.result ? userRes.result.balanceOf.toString() !== '0' : false
