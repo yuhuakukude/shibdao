@@ -258,7 +258,7 @@ export default function Content() {
           sx={{ display: 'flex', alignItems: 'center' }}
         >
           <Typography sx={{ fontSize: textSizeSmall }}>推荐链接：</Typography>
-          <Typography>{shortenAddress(userData.inviter, 6)}</Typography>
+          <Typography>{userData?.inviter ? shortenAddress(userData.inviter, 6) : '--'}</Typography>
           <Button sx={{ width: '48px', height: 'auto', fontSize: textSizeSmall }}>复制</Button>
         </Stack>
 
