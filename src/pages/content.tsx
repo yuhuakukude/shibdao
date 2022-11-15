@@ -15,7 +15,9 @@ import TransactionSubmittedModal from '../components/Modal/TransactionModals/Tra
 import useModal from '../hooks/useModal'
 import { shortenAddress } from '../utils'
 import { useParams } from 'react-router-dom'
-import { ZERO_ADDRESS } from '../constants'
+import { BASE_TOKEN, ZERO_ADDRESS } from '../constants'
+import { tryParseAmount } from '../utils/parseAmount'
+import JSBI from 'jsbi'
 
 const Rules: string[] = [
   'IDO总量: 500万亿 SHIBDAO',
@@ -54,7 +56,7 @@ export default function Content() {
   const params = useParams<{ inviter: string }>()
   const { able } = useAbleAddress(params.inviter)
   const { showModal, hideModal } = useModal()
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const bnbBalance = useCurrencyBalance(account ?? '', ETHER)
   const userData = useUserData()
   const { mint } = useMint()
@@ -63,14 +65,18 @@ export default function Content() {
   const [amount, setAmount] = useState('0.5')
   const amountList = ['0.5', '1', '1.5', '2']
   console.log('userData', userData, able)
-  //const currencyAmount = tryParseAmount(amount, BASE_TOKEN[chainId ?? 56])
-  // const overflow =
-  //   userData?.balanceOf &&
-  //   currencyAmount &&
-  //   JSBI.greaterThan(
-  //     JSBI.add(JSBI.BigInt(userData.balanceOf.raw), JSBI.BigInt(currencyAmount.raw)),
-  //     JSBI.BigInt('200000000000000000')
-  //   )
+  const currencyAmount = tryParseAmount(
+    JSBI.BigInt(Number(amount) * 10 * 1600000000000).toString(),
+    BASE_TOKEN[chainId ?? 56]
+  )
+  const overflow =
+    userData?.balanceOf &&
+    currencyAmount &&
+    JSBI.greaterThan(
+      JSBI.add(JSBI.BigInt(userData.balanceOf.raw), JSBI.BigInt(currencyAmount.raw)),
+      JSBI.BigInt('32000000000000000000000000000000')
+    )
+
   const mintCallback = useCallback(async () => {
     if (!amount || !account) return
     showModal(<TransactionPendingModal />)
@@ -203,7 +209,7 @@ export default function Content() {
           <Typography fontSize={12}>您的余额: {bnbBalance?.toSignificant()} BNB</Typography>
         </Stack>
         <Button
-          disabled={(!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able}
+          disabled={((!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able) || overflow}
           onClick={mintCallback}
           sx={{ height: 'auto', fontSize: '10px' }}
         >

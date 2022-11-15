@@ -89,7 +89,7 @@ export function useMint() {
         }
       )
     },
-    [account, addTransaction, contract]
+    [account, addTransaction, chainId, contract]
   )
 
   return {
