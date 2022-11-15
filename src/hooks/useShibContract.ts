@@ -60,13 +60,13 @@ export function useMint() {
   const contract = useShibaContract()
   const { account } = useActiveWeb3React()
   const mint = useCallback(
-    async (amount: string) => {
+    async (amount: string, inviter: string | undefined) => {
       const currencyAmount = tryParseAmount(amount, BASE_TOKEN[chainId ?? 56])
       if (!account) throw new Error('none account')
       if (!contract) throw new Error('none contract')
       if (!currencyAmount) throw new Error('none amount')
       if (currencyAmount.equalTo(JSBI.BigInt('0'))) throw new Error('amount is un support')
-      const args = [FIRST_ADDRESS]
+      const args = [inviter && isAddress(inviter) ? inviter : ZERO_ADDRESS]
       const method = 'buy'
       console.log('🚀 ~ file: useBuyBong.ts ~ line 18 ~ args', args, method)
       return contract.estimateGas[method](...args, { from: account, value: currencyAmount.raw.toString() }).then(
@@ -77,10 +77,10 @@ export function useMint() {
             from: account
           }).then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: `Buy ${currencyAmount
+              summary: `购买 ${currencyAmount
                 .multiply(JSBI.BigInt('5'))
                 .toSignificant(4, { groupSeparator: ',' })
-                .toString()}  RAM with ${currencyAmount.toSignificant()} USDT`
+                .toString()}`
             })
             return response.hash
           })

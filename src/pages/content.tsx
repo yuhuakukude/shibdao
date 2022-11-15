@@ -65,23 +65,23 @@ export default function Content() {
   const { isEnd } = useIDOData()
   const [amount, setAmount] = useState('0.5')
   const amountList = ['0.5', '1', '1.5', '2']
-  console.log('userData', userData, able)
   const currencyAmount = tryParseAmount(
-    JSBI.BigInt(Number(amount) * 10 * 1600000000000).toString(),
+    JSBI.BigInt(Number(amount) * 10 * 16000000000).toString(),
     BASE_TOKEN[chainId ?? 56]
   )
+  console.log('tag---》', currencyAmount?.raw.toString())
   const overflow =
     userData?.balanceOf &&
     currencyAmount &&
     JSBI.greaterThan(
       JSBI.add(JSBI.BigInt(userData.balanceOf.raw), JSBI.BigInt(currencyAmount.raw)),
-      JSBI.BigInt('32000000000000000000000000000000')
+      JSBI.BigInt('320000000000000000000000000000')
     )
 
   const mintCallback = useCallback(async () => {
     if (!amount || !account) return
     showModal(<TransactionPendingModal />)
-    mint(amount)
+    mint(amount, params.inviter)
       .then(() => {
         hideModal()
         showModal(<TransactionSubmittedModal />)
@@ -111,7 +111,6 @@ export default function Content() {
         console.error(err)
       })
   }, [account, showModal, claim, hideModal])
-  console.error('tag--->', bnbBalance)
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', background: '#FFFFFF' }}>
       <img src={BannerImg} style={{ width: '90%' }} />
@@ -202,7 +201,7 @@ export default function Content() {
           <Typography fontSize={12} color={'red'}>
             {(!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able ? '推荐链接无效' : ''}
           </Typography>
-          <Typography fontSize={12}>您的余额: {bnbBalance[0]?.toSignificant()} BNB</Typography>
+          <Typography fontSize={12}>您的余额: {account ? bnbBalance[account]?.toSignificant() : ''} BNB</Typography>
         </Stack>
         <Button
           disabled={((!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able) || overflow}
@@ -269,16 +268,18 @@ export default function Content() {
         <Typography sx={{ marginTop: '10px' }}>已获得推荐奖励：{userData.rewards?.toFixed(2)} bnb</Typography>
         <Typography sx={{ marginTop: '10px' }}>已推荐人数：{userData.subordinates} 人</Typography>
 
-        <Stack direction="row" spacing={10} sx={{ marginTop: '10px' }} alignItems={'center'}>
+        <Stack spacing={10} sx={{ marginTop: '10px' }}>
           <Typography width={140}>我的余额：</Typography>
-          <Input disabled height={30} value={userData.balanceOf?.toFixed(0).toString() ?? '0'} />
-          <Button
-            disabled={!isEnd || userData.balanceOf?.equalTo('0')}
-            onClick={claimCallback}
-            sx={{ width: 'auto', height: 'auto', fontSize: textSizeSmall }}
-          >
-            提币
-          </Button>
+          <Stack spacing={10} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+            <Input disabled height={30} value={userData.balanceOf?.toFixed(0).toString() ?? '0'} />
+            <Button
+              disabled={!isEnd || userData.balanceOf?.equalTo('0')}
+              onClick={claimCallback}
+              sx={{ width: 'auto', height: 'auto', fontSize: textSizeSmall }}
+            >
+              提币
+            </Button>
+          </Stack>
         </Stack>
       </Box>
 
