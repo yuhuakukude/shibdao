@@ -17,7 +17,7 @@ interface Tab {
 export const Tabs: Tab[] = [
   { title: 'IDO', route: routes.ido },
   { title: '通知', route: routes.note },
-  { title: '审计报告', link: 'https://google.com' },
+  { title: '审计报告', route: routes.report },
   { title: '白皮书', route: routes.whitepage },
   { title: 'English', route: routes.english }
 ]
@@ -74,6 +74,13 @@ const Filler = styled('div')(({ theme }) => ({
   }
 }))
 
+const Nav = styled(NavLink)`
+  color: #0084ff;
+  '&:hover': {
+    opacity: 0.6;
+  }
+`
+
 export default function Header() {
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLImageElement>(null)
@@ -96,7 +103,7 @@ export default function Header() {
                     return (
                       <MenuItem key={index}>
                         {tab.route && (
-                          <NavLink
+                          <Nav
                             onClick={() => {
                               setOpen(false)
                             }}
@@ -104,7 +111,7 @@ export default function Header() {
                             to={tab.route}
                           >
                             {tab.title}
-                          </NavLink>
+                          </Nav>
                         )}
                         {tab.link && <ExternalLink href={tab.link}> {tab.title}</ExternalLink>}
                       </MenuItem>
@@ -124,7 +131,7 @@ export default function Header() {
                 return (
                   <MenuItem key={index}>
                     {tab.route && (
-                      <NavLink
+                      <Nav
                         onClick={() => {
                           setOpen(false)
                         }}
@@ -132,7 +139,7 @@ export default function Header() {
                         to={tab.route}
                       >
                         {tab.title}
-                      </NavLink>
+                      </Nav>
                     )}
                     {tab.link && <ExternalLink href={tab.link}> {tab.title}</ExternalLink>}
                   </MenuItem>

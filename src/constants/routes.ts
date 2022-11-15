@@ -2,5 +2,6 @@ export const routes = {
   ido: '/',
   note: '/note',
   english: '/english',
-  whitepage: './whitepage'
+  whitepage: './whitepage',
+  report: './report'
 }
