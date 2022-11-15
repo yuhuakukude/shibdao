@@ -62,6 +62,10 @@ export function useMint() {
   const mint = useCallback(
     async (amount: string, inviter: string | undefined) => {
       const currencyAmount = tryParseAmount(amount, BASE_TOKEN[chainId ?? 56])
+      const daoAmount = tryParseAmount(
+        JSBI.BigInt(Number(amount) * 10 * 16000000000).toString(),
+        BASE_TOKEN[chainId ?? 56]
+      )
       if (!account) throw new Error('none account')
       if (!contract) throw new Error('none contract')
       if (!currencyAmount) throw new Error('none amount')
@@ -77,10 +81,7 @@ export function useMint() {
             from: account
           }).then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: `购买 ${currencyAmount
-                .multiply(JSBI.BigInt('5'))
-                .toSignificant(4, { groupSeparator: ',' })
-                .toString()}`
+              summary: `购买 ${daoAmount?.toFixed(0).toString()} SHIBADAO`
             })
             return response.hash
           })

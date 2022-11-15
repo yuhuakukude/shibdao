@@ -11,8 +11,8 @@ export function CloseIcon({ onClick }: { onClick?: () => void }) {
       sx={{
         padding: 0,
         position: 'absolute',
-        top: '24px',
-        right: '24px',
+        top: '12px',
+        right: '12px',
         '&:hover $closeIcon': {
           color: theme => theme.palette.text.primary
         }
