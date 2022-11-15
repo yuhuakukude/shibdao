@@ -10,6 +10,7 @@ import Footer from 'components/Footer'
 import Content from './content'
 import En from './en'
 import Note from './note'
+import ComingSoon from './ComingSoon'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -61,6 +62,7 @@ export default function App() {
                   <Route path="/:inviter" element={<Content />} />
                   <Route path="/note" element={<Note />} />
                   <Route path="/english" element={<En />} />
+                  <Route path="/whitepage" element={<ComingSoon />} />
                   <Route path="/" element={<Content />} />
                 </Routes>
               </Web3ReactManager>

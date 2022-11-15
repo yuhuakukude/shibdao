@@ -26,10 +26,9 @@ export default function ComingSoon() {
   return (
     <Frame>
       <Title>
-        Coming Soon <Dots />
+        敬请期待 <Dots />
       </Title>
-      <div>This section is still implemeting.</div>
-      <div>Please come back later</div>
+      <div>正在开发中.</div>
     </Frame>
   )
 }

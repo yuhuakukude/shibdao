@@ -5,6 +5,7 @@ import MenuIcon from 'assets/svg/menu.svg'
 import Web3Status from './Web3Status'
 import { NavLink } from 'react-router-dom'
 import { ExternalLink } from '../../theme/components'
+import { HideOnMobile, ShowOnMobile } from '../../theme'
 
 interface Tab {
   title: string
@@ -17,7 +18,7 @@ export const Tabs: Tab[] = [
   { title: 'IDO', route: routes.ido },
   { title: '通知', route: routes.note },
   { title: '审计报告', link: 'https://google.com' },
-  { title: '白皮书', link: 'https://google.com' },
+  { title: '白皮书', route: routes.whitepage },
   { title: 'English', route: routes.english }
 ]
 
@@ -85,8 +86,10 @@ export default function Header() {
       <StyledAppBar>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
           <Box display={'flex'}>
-            <img ref={anchorRef} style={{ width: '24px', height: '24px' }} src={MenuIcon} onClick={handleToggle} />
-            <Popper anchorEl={anchorRef.current} open={open}>
+            <ShowOnMobile>
+              <img ref={anchorRef} style={{ width: '24px', height: '24px' }} src={MenuIcon} onClick={handleToggle} />
+            </ShowOnMobile>
+            <Popper style={{ zIndex: 1000 }} anchorEl={anchorRef.current} open={open}>
               <Paper>
                 <MenuList>
                   {Tabs.map((tab, index) => {
@@ -114,6 +117,30 @@ export default function Header() {
               SHIBA INU DAO
             </Typography>
           </Box>
+
+          <HideOnMobile sx={{ flex: 1, marginLeft: 20 }}>
+            <Box display={'flex'} justifyContent={'flex-start'}>
+              {Tabs.map((tab, index) => {
+                return (
+                  <MenuItem key={index}>
+                    {tab.route && (
+                      <NavLink
+                        onClick={() => {
+                          setOpen(false)
+                        }}
+                        style={{ textDecoration: 'none' }}
+                        to={tab.route}
+                      >
+                        {tab.title}
+                      </NavLink>
+                    )}
+                    {tab.link && <ExternalLink href={tab.link}> {tab.title}</ExternalLink>}
+                  </MenuItem>
+                )
+              })}
+            </Box>
+          </HideOnMobile>
+
           <Box sx={{ display: 'flex', alignItems: 'flex-end', width: 'auto' }}>
             <Web3Status />
           </Box>
