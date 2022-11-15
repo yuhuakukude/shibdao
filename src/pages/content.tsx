@@ -251,15 +251,15 @@ export default function Content() {
           sx={{ display: 'flex', alignItems: 'center' }}
         >
           <Typography sx={{ fontSize: textSizeSmall }}>推荐链接：</Typography>
-          <Typography>{account ? shortenText(`https://${window.location.host}/${account}`, 10) : '--'}</Typography>
+          <Typography>{account ? shortenText(`https://${window.location.host}/${account}`, 8) : '--'}</Typography>
           <Button
             disabled={isCopied || !account}
             onClick={() => {
               setCopied(`https://${window.location.host}/${account}`)
             }}
-            sx={{ width: '48px', height: 'auto', fontSize: textSizeSmall }}
+            sx={{ width: '68px', height: 'auto', fontSize: textSizeSmall }}
           >
-            {isCopied ? '已复制' : '复制'}
+            {isCopied ? '复制' : '复制'}
           </Button>
         </Stack>
 
