@@ -6,8 +6,7 @@ import { Box, Button, Stack, styled, Typography } from '@mui/material'
 import { useCallback, useState } from 'react'
 import Input from '../components/Input'
 import { useActiveWeb3React } from '../hooks'
-import { useCurrencyBalance } from '../state/wallet/hooks'
-import { ETHER } from '../constants/token'
+import { useETHBalances } from '../state/wallet/hooks'
 import { useAbleAddress, useClaim, useIDOData, useMint, useUserData } from '../hooks/useShibContract'
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
@@ -57,7 +56,7 @@ export default function Content() {
   const { able } = useAbleAddress(params.inviter)
   const { showModal, hideModal } = useModal()
   const { account, chainId } = useActiveWeb3React()
-  const bnbBalance = useCurrencyBalance(account ?? undefined, ETHER)
+  const bnbBalance = useETHBalances([account ?? undefined])
   const userData = useUserData()
   const { mint } = useMint()
   const { claim } = useClaim()
@@ -206,7 +205,7 @@ export default function Content() {
           <Typography fontSize={12} color={'red'}>
             {(!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able ? '推荐链接无效' : ''}
           </Typography>
-          <Typography fontSize={12}>您的余额: {bnbBalance?.toSignificant()} BNB</Typography>
+          <Typography fontSize={12}>您的余额: {bnbBalance[0]?.toSignificant()} BNB</Typography>
         </Stack>
         <Button
           disabled={((!userData?.inviter || userData.inviter === ZERO_ADDRESS) && !able) || overflow}
